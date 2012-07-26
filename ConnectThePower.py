@@ -7,15 +7,22 @@ One a cable section is placed - it stays there!
 You can dispose of a section without placing it, but you must take the next.
 """
 import pygame
+from time import sleep
 
 __author__ = 'danny'
+
+class SceneBase(object):
+    def __init__(self, screen):
+        self._screen = screen
 
 class Splash(object):
     """Picture of crazy electrician. Clicks/presses fade to menu"""
     pass
 
-class MainGame(object):
-    pass
+class MainGame(SceneBase):
+    def enter(self):
+        """Enter the game screen"""
+        sleep(10)
 
 class MainMenu(object):
     """Game, settings, exit"""
@@ -25,13 +32,17 @@ class Settings(object):
     """Sound/music on off. Fullscreen/not is window controls"""
     pass
 
+def init():
+    screen = pygame.display.set_mode((640, 400))
+    return screen
+  
 def main():
+    screen = init()
     spInstance = Splash()
-    game = MainGame()
+    game = MainGame(screen)
     menu = MainMenu()
     settings = Settings()
-
-    pass
-
+    game.enter()    
+    
 if __name__ == "__main__":
     main()
