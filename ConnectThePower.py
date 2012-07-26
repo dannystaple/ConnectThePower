@@ -15,14 +15,61 @@ class SceneBase(object):
     def __init__(self, screen):
         self._screen = screen
 
+    def _rect(self, colour, rect):
+        pygame.draw.rect(self._screen, colour, rect)
+
+    def _line(self, colour, start, end):
+        pygame.draw.line(self._screen, colour, start, end)
+
 class Splash(object):
     """Picture of crazy electrician. Clicks/presses fade to menu"""
     pass
 
 class MainGame(SceneBase):
+    electric_blue = (192, 192, 255)
+    black = (0, 0, 0)
+    grey = (0x88, 0x88, 0x88)
+
+    bg_colour = electric_blue
+
+    top_coord = 50
+
+    game_rect_colour = black
+    game_rect_height = 300
+    game_rect_width = 300
+    game_rect_left = 170
+    game_rect = (game_rect_left, top_coord, game_rect_width, game_rect_height)
+    next_item_rect = (35, top_coord, 100, 100)
+    next_item_colour = black
+    grid_size = 50
+    grid_colour = grey
+    grid_left = game_rect_left
+    grid_right = game_rect_left + game_rect_width
+
+
     def enter(self):
         """Enter the game screen"""
-        sleep(10)
+        self._playing = True
+
+        while self._playing:
+            event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                self._playing = False
+            self._render()
+
+    def _draw_grid(self):
+        [self._line(self.grid_colour, (self.grid_left, row + self.top_coord), (self.grid_right, row + self.top_coord))
+         for row in range(0, self.game_rect_height, self.grid_size)]
+
+    def _render(self):
+        self._screen.fill(self.bg_colour)
+        self._rect(self.game_rect_colour, self.game_rect)
+        self._rect(self.next_item_colour, self.next_item_rect)
+
+        self._draw_grid()
+
+        pygame.display.flip()
+
 
 class MainMenu(object):
     """Game, settings, exit"""
