@@ -45,7 +45,8 @@ class MainGame(SceneBase):
     grid_colour = grey
     grid_left = game_rect_left
     grid_right = game_rect_left + game_rect_width
-
+    grid_top = top_coord
+    grid_bottom = top_coord + game_rect_height
 
     def enter(self):
         """Enter the game screen"""
@@ -60,6 +61,8 @@ class MainGame(SceneBase):
     def _draw_grid(self):
         [self._line(self.grid_colour, (self.grid_left, row + self.top_coord), (self.grid_right, row + self.top_coord))
          for row in range(0, self.game_rect_height, self.grid_size)]
+        [self._line(self.grid_colour, (self.grid_left + col, self.grid_top), (self.grid_left + col, self.grid_bottom))
+         for col in range(0, self.game_rect_width, self.grid_size)]
 
     def _render(self):
         self._screen.fill(self.bg_colour)
