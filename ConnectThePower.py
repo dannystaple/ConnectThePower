@@ -39,14 +39,20 @@ class MainGame(SceneBase):
     game_rect_width = 300
     game_rect_left = 170
     game_rect = (game_rect_left, top_coord, game_rect_width, game_rect_height)
+
+    straight_line = pygame.image.load("StraightLine.png")
+
     next_item_rect = (35, top_coord, 100, 100)
     next_item_colour = black
+
     grid_size = 50
     grid_colour = grey
     grid_left = game_rect_left
     grid_right = game_rect_left + game_rect_width
     grid_top = top_coord
     grid_bottom = top_coord + game_rect_height
+
+
 
     def enter(self):
         """Enter the game screen"""
@@ -70,6 +76,8 @@ class MainGame(SceneBase):
         self._rect(self.next_item_colour, self.next_item_rect)
 
         self._draw_grid()
+
+        self._screen.blit(self.straight_line, self.next_item_rect)
 
         pygame.display.flip()
 
