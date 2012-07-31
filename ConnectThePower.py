@@ -62,6 +62,9 @@ class Point(object):
     def __hash__(self):
         return hash((self._x, self._y))
 
+    def __eq__(self, other):
+        return self._x == other._x and self._y == other._y
+
     def __getitem__(self, item):
         if item is 0:
             return self._x
@@ -72,8 +75,11 @@ class Point(object):
         yield self._x
         yield self._y
 
+    def __repr__(self):
+        return "Point%s" % (str(self),)
+
     def __str__(self):
-        return "%s, %s" % (str(self._x), str(self._y))
+        return "(%s, %s)" % (str(self._x), str(self._y))
 
 class GameCore(object):
     """Core game play system"""
@@ -88,8 +94,8 @@ class GameCore(object):
 
     class StraightSegment(object):
         @classmethod
-        def getTerminals(self, input_direction):
-            return -input_direction
+        def getTerminals(self, input_direction, pos):
+            return [(pos, -input_direction)]
 
     class SimpleLevel(object):
         def __init__(self, supply_position, output_position):
@@ -103,22 +109,24 @@ class GameCore(object):
             terminals = [self._supply_position]
             usable_moves = dict(moves)
             while terminals:
-                print repr(terminals)
+                print "Terminals", repr(terminals)
                 grid_places = [(pos + direction, -direction) for pos, direction in terminals]
-                print repr(grid_places)
+                print "Grid places", repr(grid_places)
                 if self._output_position in grid_places:
                     return True
+                print "Usable moves #1", repr(usable_moves)
+
 
                 segments = [(usable_moves[pos], input_dir, pos)
                     for pos, input_dir in grid_places if usable_moves.has_key(pos)]
-                print repr(segments)
-                [usable_moves.delete(pos) for seg, direction, pos in segments]
-                print repr(usable_moves)
-                new_terminal_groups = [segment[0].get_terminals(input_dir)
+                print "Segments", repr(segments)
+                [usable_moves.pop(pos) for seg, direction, pos in segments]
+                print "Usable moves #2", repr(usable_moves)
+                new_terminal_groups = [segment[0].getTerminals(input_dir, pos)
                                        for segment, input_dir, pos in segments]
-                print repr(new_terminal_groups)
+                print "terminal groups", repr(new_terminal_groups)
                 sleep(1)
-                terminals = itertools.chain(*new_terminal_groups)
+                terminals = list(itertools.chain(*new_terminal_groups))
                 sleep(1)
             return False
 
