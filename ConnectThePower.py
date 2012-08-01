@@ -9,6 +9,7 @@ You can dispose of a section without placing it, but you must take the next.
 import pygame
 import itertools
 from time import sleep
+from Point import Point
 
 __author__ = 'danny'
 
@@ -25,61 +26,6 @@ class SceneBase(object):
 class Splash(object):
     """Picture of crazy electrician. Clicks/presses fade to menu"""
     pass
-
-def addCoords(a, b):
-    ax, ay = a
-    bx, by = b
-    return ax + bx, ay + by
-
-class Point(object):
-    def __init__(self, x, y = None):
-        if y is not None:
-            self._x = x
-            self._y = y
-        else:
-            self._x, self._y = x
-
-    def __add__(self, other):
-        return Point(self._x + other._x, self._y + other._y)
-
-    def __sub__(self, other):
-        return Point(self._x - other._x, self._y - other._y)
-
-    def __neg__(self):
-        return Point(- self._x, -self._y)
-
-    def __cmp__(self, other):
-        return self._x == other._x and self._y == other._y
-
-    def __mul__(self, other):
-        """Other must be numeric"""
-        return Point(self._x * other, self._y * other)
-
-    def __div__(self, other):
-        """Other must be numeric"""
-        return Point(self._x / other, self._y / other)
-
-    def __hash__(self):
-        return hash((self._x, self._y))
-
-    def __eq__(self, other):
-        return self._x == other._x and self._y == other._y
-
-    def __getitem__(self, item):
-        if item is 0:
-            return self._x
-        if item == 1:
-            return self._y
-
-    def __iter__(self):
-        yield self._x
-        yield self._y
-
-    def __repr__(self):
-        return "Point%s" % (str(self),)
-
-    def __str__(self):
-        return "(%s, %s)" % (str(self._x), str(self._y))
 
 class GameCore(object):
     """Core game play system"""
@@ -109,25 +55,15 @@ class GameCore(object):
             terminals = [self._supply_position]
             usable_moves = dict(moves)
             while terminals:
-                print "Terminals", repr(terminals)
                 grid_places = [(pos + direction, -direction) for pos, direction in terminals]
-                print "Grid places", repr(grid_places)
                 if self._output_position in grid_places:
                     return True
-                print "Usable moves #1", repr(usable_moves)
-
-
                 segments = [(usable_moves[pos], input_dir, pos)
                     for pos, input_dir in grid_places if usable_moves.has_key(pos)]
-                print "Segments", repr(segments)
                 [usable_moves.pop(pos) for seg, direction, pos in segments]
-                print "Usable moves #2", repr(usable_moves)
                 new_terminal_groups = [segment[0].getTerminals(input_dir, pos)
                                        for segment, input_dir, pos in segments]
-                print "terminal groups", repr(new_terminal_groups)
-                sleep(1)
                 terminals = list(itertools.chain(*new_terminal_groups))
-                sleep(1)
             return False
 
     level1 = SimpleLevel( (Point(-1, 0), right), (Point(4, 0), left))
@@ -164,8 +100,6 @@ class MainGameUI(SceneBase):
     game_rect_colour = black
     game_rect = pygame.Rect(170, top_coord, 300, 300)
 
-    segments = {GameCore.StraightSegment: pygame.image.load("StraightLine.png")}
-
     next_item_rect = (35, top_coord, 100, 100)
     next_item_colour = black
 
@@ -180,6 +114,8 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
+        self.segments = {GameCore.StraightSegment: pygame.image.load("StraightLine.png")}
+
         self._core = GameCore()
 
         self._playing = True
@@ -203,7 +139,10 @@ class MainGameUI(SceneBase):
         for coords, move, rotation in self._core.allMoves():
             segment = self.segments[move]
             coords = self.fromCoreGrid(coords)
-            self._screen.blit(segment, pygame.Rect(coords, (self.grid_size, self.grid_size)))
+            rect = pygame.Rect(tuple(coords), (self.grid_size, self.grid_size))
+            print "Rect is ", repr(rect)
+            sleep(1)
+            self._screen.blit(segment, rect)
 
     def _render(self):
         self._screen.fill(self.bg_colour)
