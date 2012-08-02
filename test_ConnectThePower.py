@@ -1,5 +1,6 @@
 import unittest
-from ConnectThePower import GameCore, Point
+import mock
+from ConnectThePower import GameCore, Point, MainGameUI
 
 class TestPoint(unittest.TestCase):
     """Test the point class"""
@@ -26,3 +27,26 @@ class TestGameCore(unittest.TestCase):
         gc.playMove(Point(0,0), gc.StraightSegment, 0)
         game_won = gc.hasWon()
         self.assertEquals(False, game_won)
+
+    def test_gameCoreNotWonWithFewerThanGridCells(self):
+        """If we have 6 grid cells, then 5 moves should not win the level"""
+        gc = GameCore()
+        toPlay = [(0,0), (1,0), (2,0), (3,0), (4, 0)]
+        toPlay = [Point(c) for c in toPlay]
+        [gc.playMove(c, gc.StraightSegment, 0) for c in toPlay]
+        game_won = gc.hasWon()
+        self.assertFalse(game_won)
+
+class TestGameUI(unittest.TestCase):
+    """Test Game UI features"""
+
+    def test_testGridCoordsShouldMapToScreenCoords(self):
+        """
+        Given a set of grid coordinates, it should be able to map them
+        to sensible screen coordinates.
+        """
+        grid_coord = Point(0, 0)
+        expected_coords = Point(MainGameUI.grid_left, MainGameUI.grid_top)
+        fakeDisplay = mock.Mock()
+        ui = MainGameUI(fakeDisplay)
+        self.assertEqual(expected_coords, ui.fromCoreGrid(grid_coord))

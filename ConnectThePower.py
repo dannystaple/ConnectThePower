@@ -36,7 +36,7 @@ class GameCore(object):
     bottom = Point(0, 1)
     left = Point(-1, 0)
 
-    grid_cells = 5
+    grid_cells = 6
 
     class StraightSegment(object):
         @classmethod
@@ -52,6 +52,8 @@ class GameCore(object):
 
         def checkWin(self, moves):
             """Check the set of moves to see if there is a win condition"""
+            if len(moves) < GameCore.grid_cells:
+                return False
             terminals = [self._supply_position]
             usable_moves = dict(moves)
             while terminals:
@@ -66,7 +68,7 @@ class GameCore(object):
                 terminals = list(itertools.chain(*new_terminal_groups))
             return False
 
-    level1 = SimpleLevel( (Point(-1, 0), right), (Point(4, 0), left))
+    level1 = SimpleLevel( (Point(-1, 0), right), (Point(5, 0), left))
 
     def __init__(self):
         self._moves = {}
@@ -140,8 +142,6 @@ class MainGameUI(SceneBase):
             segment = self.segments[move]
             coords = self.fromCoreGrid(coords)
             rect = pygame.Rect(tuple(coords), (self.grid_size, self.grid_size))
-            print "Rect is ", repr(rect)
-            sleep(1)
             self._screen.blit(segment, rect)
 
     def _render(self):
@@ -162,7 +162,7 @@ class MainGameUI(SceneBase):
 
     def fromCoreGrid(self, pos):
         """Given a core grid coord, convert to ui position"""
-        return (Point(pos) + Point(self.game_rect.topleft)) * self.grid_size
+        return (Point(pos) * self.grid_size) + Point(self.game_rect.topleft)
 
     def _playMove(self, pos):
         if self.game_rect.collidepoint(pos):
