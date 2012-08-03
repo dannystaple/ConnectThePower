@@ -21,9 +21,6 @@ class Point(object):
     def __neg__(self):
         return Point(- self.x, -self.y)
 
-    def __cmp__(self, other):
-        return self.x == other.x and self.y == other.y
-
     def __mul__(self, other):
         """Other must be numeric"""
         return Point(self.x * other, self.y * other)
@@ -36,7 +33,7 @@ class Point(object):
         return hash((self.x, self.y))
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+        return (self.x == other.x) and (self.y == other.y)
 
     def __getitem__(self, item):
         if item is 0:
