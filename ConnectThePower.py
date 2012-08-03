@@ -6,6 +6,7 @@ You place the cable sections onto the square grid, you can rotate them.
 One a cable section is placed - it stays there!
 You can dispose of a section without placing it, but you must take the next.
 """
+import random
 import pygame
 import itertools
 from time import sleep
@@ -39,9 +40,17 @@ class GameCore(object):
     grid_cells = 6
 
     class StraightSegment(object):
-        @classmethod
+        def __init__(self, rotation = 0):
+            """Rotation is in terms of multiples of 90"""
+            self.rotation = rotation
+            orig_terminals = [GameCore.left, GameCore.right]
+            self.terminals = [terminal.rotate(rotation) for terminal in orig_terminals]
+
         def getTerminals(self, input_direction, pos):
+            terminals = [Point(n) for n in self.terminals if n != pos]
             return [(pos, -input_direction)]
+
+    segments = [StraightSegment]
 
     class SimpleLevel(object):
         def __init__(self, supply_position, output_position):
@@ -63,18 +72,24 @@ class GameCore(object):
                 segments = [(usable_moves[pos], input_dir, pos)
                     for pos, input_dir in grid_places if usable_moves.has_key(pos)]
                 [usable_moves.pop(pos) for seg, direction, pos in segments]
-                new_terminal_groups = [segment[0].getTerminals(input_dir, pos)
+                new_terminal_groups = [segment.getTerminals(input_dir, pos)
                                        for segment, input_dir, pos in segments]
                 terminals = list(itertools.chain(*new_terminal_groups))
             return False
 
-    level1 = SimpleLevel( (Point(-1, 0), right), (Point(5, 0), left))
+    level1 = SimpleLevel( (Point(-1, 0), right), (Point(6, 0), left))
 
     def __init__(self):
         self._moves = {}
+        self._nextSegment = self.StraightSegment()
 
-    def playMove(self, coords, segment, rotation):
-        self._moves[Point(coords)] = (segment, rotation)
+    def playMove(self, coords):
+        self._moves[Point(coords)] = self._nextSegment
+        self._newSegment()
+
+    def _newSegment(self):
+        """Choose a new segment"""
+        self._nextSegment = random.choice(self.segments)(random.choice(range(0,3)))
 
     def hasWon(self):
         return self.level1.checkWin(self._moves)
@@ -83,10 +98,10 @@ class GameCore(object):
         return self._moves[Point(coords)]
 
     def allMoves(self):
-        return [(coords, item[0], item[1]) for coords, item in self._moves.items()]
+        return [(coords, segment) for coords, segment in self._moves.items()]
 
     def nextSegment(self):
-        return GameCore.StraightSegment
+        return self._nextSegment
 
 
 
@@ -137,12 +152,17 @@ class MainGameUI(SceneBase):
         [self._line(self.grid_colour, (col, self.grid_top), (col, self.grid_bottom))
          for col in self.grid_cols]
 
+    def _renderSegment(self, segment, rect):
+        seg_image = self.segments[type(segment)]
+        rotation = segment.rotation * 90
+        rotsegment = pygame.transform.rotate(seg_image, rotation)
+        self._screen.blit(rotsegment, rect)
+
     def _renderMoves(self):
-        for coords, move, rotation in self._core.allMoves():
-            segment = self.segments[move]
+        for coords, move in self._core.allMoves():
             coords = self.fromCoreGrid(coords)
             rect = pygame.Rect(tuple(coords), (self.grid_size, self.grid_size))
-            self._screen.blit(segment, rect)
+            self._renderSegment(move, rect)
 
     def _render(self):
         self._screen.fill(self.bg_colour)
@@ -151,7 +171,7 @@ class MainGameUI(SceneBase):
 
         self._draw_grid()
 
-        self._screen.blit(self.segments[self._core.nextSegment()], self.next_item_rect)
+        self._renderSegment(self._core.nextSegment(), self.next_item_rect)
 
         self._renderMoves()
         pygame.display.flip()
@@ -169,7 +189,7 @@ class MainGameUI(SceneBase):
             print "Played in rect at point %s" % (str(pos),)
             pos = self.toCoreGrid(pos)
             print "Core grid is point %s" % (str(pos),)
-            self._core.playMove(pos, self._core.nextSegment(), 0)
+            self._core.playMove(pos)
         if self._core.hasWon():
             print "I think you won!"
 

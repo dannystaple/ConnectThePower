@@ -19,12 +19,23 @@ class TestPoint(unittest.TestCase):
         d = {a: 23}
         self.assertTrue(d.has_key(b))
 
+    def test_rotatePointDegrees(self):
+        a = Point(1, 0)
+        b = a.rotate(90)
+        self.assertEqual(b, Point(0, 1))
+
 class TestGameCore(unittest.TestCase):
     """Test the basic stuff in the game core"""
 
+    def helper_playMove(self, gc, coord, segment):
+        """This helper will override the stuff in the game core,
+        but is not the normal use case - so stays in a test helper"""
+        gc._nextSegment = segment
+        gc.playMove(coord)
+
     def test_gameCoreNotWonWhenOnlyOneStraightSegmentPlayed(self):
         gc = GameCore()
-        gc.playMove(Point(0,0), gc.StraightSegment, 0)
+        self.helper_playMove(gc, Point(0,0), gc.StraightSegment(0))
         game_won = gc.hasWon()
         self.assertEquals(False, game_won)
 
@@ -33,7 +44,7 @@ class TestGameCore(unittest.TestCase):
         gc = GameCore()
         toPlay = [(0,0), (1,0), (2,0), (3,0), (4, 0)]
         toPlay = [Point(c) for c in toPlay]
-        [gc.playMove(c, gc.StraightSegment, 0) for c in toPlay]
+        [self.helper_playMove(gc, c, gc.StraightSegment(0)) for c in toPlay]
         game_won = gc.hasWon()
         self.assertFalse(game_won)
 
