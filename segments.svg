@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="segments.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.5383615"
+     inkscape:cx="206.69287"
+     inkscape:cy="908.60296"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-global="true"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1215"
+     inkscape:window-height="776"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="100,950"
+       id="guide3767" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="150,955"
+       id="guide3769" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="200,955"
+       id="guide3771" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="250,945"
+       id="guide3773" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="300,950"
+       id="guide3775" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="120,945"
+       id="guide3777" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="130,945"
+       id="guide3779" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="170,940"
+       id="guide3781" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="180,945"
+       id="guide3783" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="220,950"
+       id="guide3785" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="230,955"
+       id="guide3787" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="270,950"
+       id="guide3789" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="280,950"
+       id="guide3791" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#0000ff;fill-rule:evenodd;stroke:none"
+       d="M 250 112.375 L 250 132.375 L 270 132.375 L 270 112.375 L 250 112.375 z M 280 112.375 L 280 132.375 L 280 137.375 L 280 142.375 L 250 142.375 L 250 162.375 L 300 162.375 L 300 112.375 L 280 112.375 z "
+       id="rect2991"
+       inkscape:export-filename="/home/stapled/ConnectThepowerGame/RightAngle.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#0000ff;fill-rule:evenodd;stroke:none"
+       d="M 100 112.375 L 100 132.375 L 150 132.375 L 150 112.375 L 100 112.375 z M 100 142.375 L 100 162.375 L 150 162.375 L 150 142.375 L 100 142.375 z "
+       id="path3889"
+       inkscape:export-filename="/home/stapled/ConnectThepowerGame/StraightLine.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#0000ff;fill-rule:evenodd;stroke:none"
+       d="M 150 112.375 L 150 132.375 L 170 132.375 L 170 112.375 L 150 112.375 z M 180 112.375 L 180 132.375 L 200 132.375 L 200 112.375 L 180 112.375 z M 150 142.375 L 150 162.375 L 200 162.375 L 200 142.375 L 150 142.375 z "
+       id="path3893"
+       inkscape:export-filename="/home/stapled/ConnectThepowerGame/TJunction.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#0000ff;fill-rule:evenodd;stroke:none"
+       d="M 200 112.375 L 200 132.375 L 220 132.375 L 220 112.375 L 200 112.375 z M 230 112.375 L 230 132.375 L 250 132.375 L 250 112.375 L 230 112.375 z M 200 142.375 L 200 162.375 L 220 162.375 L 220 142.375 L 200 142.375 z M 230 142.375 L 230 162.375 L 250 162.375 L 250 142.375 L 230 142.375 z "
+       id="path3904"
+       inkscape:export-filename="/home/stapled/ConnectThepowerGame/Cross.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>
