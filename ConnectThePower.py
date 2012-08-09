@@ -28,29 +28,56 @@ class Splash(object):
     """Picture of crazy electrician. Clicks/presses fade to menu"""
     pass
 
+class Directions(object):
+    #Directions - offsets on grid system
+    top = up = Point(0, -1)
+    right = Point(1, 0)
+    bottom = down = Point(0, 1)
+    left = Point(-1, 0)
+
+def getGridPlacesForTerminals(terminals):
+    return [(pos + direction, -direction) for pos, direction in terminals]
+
+def getSegmentsForGridPlaces(grid_places, usable_moves):
+    """For each position, it will use the usable moves list,
+    to get the segment, input direction and position"""
+    segments = [(usable_moves[pos], input_dir, pos)
+        for pos, input_dir in grid_places if usable_moves.has_key(pos)]
+    return segments
+
+def filterUsedMoves(segments, usable_moves):
+    [usable_moves.pop(pos) for seg, direction, pos in segments]
+
+def getNewTerminalGroups(segments):
+    groups = [segment.getTerminals(input_dir, pos)
+                           for segment, input_dir, pos in segments]
+    groups = [group for group in groups if group]
+    return groups
+
 class GameCore(object):
     """Core game play system"""
 
-    #Directions - offsets on grid system
-    top = Point(0, -1)
-    right = Point(1, 0)
-    bottom = Point(0, 1)
-    left = Point(-1, 0)
-
     grid_cells = 6
 
-    class StraightSegment(object):
+    class SegmentBase(object):
+        def getTerminals(self, input_direction, pos):
+            if input_direction not in self.terminals:
+                return None
+            terminals = [(pos, n) for n in self.terminals if n != input_direction]
+            return terminals
+
         def __init__(self, rotation = 0):
             """Rotation is in terms of multiples of 90"""
             self.rotation = rotation
-            orig_terminals = [GameCore.left, GameCore.right]
-            self.terminals = [terminal.rotate(rotation) for terminal in orig_terminals]
+            self.terminals = [terminal.rotate(rotation) for terminal in self.orig_terminals]
 
-        def getTerminals(self, input_direction, pos):
-            terminals = [Point(n) for n in self.terminals if n != pos]
-            return [(pos, -input_direction)]
+    class StraightSegment(SegmentBase):
+        orig_terminals = [Directions.left, Directions.right]
 
-    segments = [StraightSegment]
+    class CornerSegment(SegmentBase):
+        orig_terminals = [Directions.left, Directions.top]
+
+    segments = [StraightSegment, CornerSegment]
 
     class SimpleLevel(object):
         def __init__(self, supply_position, output_position):
@@ -66,18 +93,16 @@ class GameCore(object):
             terminals = [self._supply_position]
             usable_moves = dict(moves)
             while terminals:
-                grid_places = [(pos + direction, -direction) for pos, direction in terminals]
+                grid_places = getGridPlacesForTerminals(terminals)
                 if self._output_position in grid_places:
                     return True
-                segments = [(usable_moves[pos], input_dir, pos)
-                    for pos, input_dir in grid_places if usable_moves.has_key(pos)]
-                [usable_moves.pop(pos) for seg, direction, pos in segments]
-                new_terminal_groups = [segment.getTerminals(input_dir, pos)
-                                       for segment, input_dir, pos in segments]
+                segments = getSegmentsForGridPlaces(grid_places, usable_moves)
+                filterUsedMoves(segments, usable_moves)
+                new_terminal_groups = getNewTerminalGroups(segments)
                 terminals = list(itertools.chain(*new_terminal_groups))
             return False
 
-    level1 = SimpleLevel( (Point(-1, 0), right), (Point(6, 0), left))
+    level1 = SimpleLevel( (Point(-1, 0), Directions.right), (Point(6, 0), Directions.left))
 
     def __init__(self):
         self._moves = {}
@@ -89,7 +114,7 @@ class GameCore(object):
 
     def _newSegment(self):
         """Choose a new segment"""
-        self._nextSegment = random.choice(self.segments)(random.choice(range(0,3)))
+        self._nextSegment = random.choice(self.segments)(random.choice(range(0,4)))
 
     def hasWon(self):
         return self.level1.checkWin(self._moves)
@@ -131,7 +156,8 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
-        self.segments = {GameCore.StraightSegment: pygame.image.load("StraightLine.png")}
+        self.segments = {GameCore.StraightSegment: pygame.image.load("StraightLine.png"),
+                         GameCore.CornerSegment: pygame.image.load("RightAngle.png")}
 
         self._core = GameCore()
 

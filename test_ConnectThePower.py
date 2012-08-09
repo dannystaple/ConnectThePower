@@ -1,28 +1,8 @@
 import unittest
 import mock
-from ConnectThePower import GameCore, Point, MainGameUI
-
-class TestPoint(unittest.TestCase):
-    """Test the point class"""
-    def test_hashOfPointsAreTheSame(self):
-        """Given two points of 0,0 - they should have same hash"""
-        a = Point(0,0)
-        b = Point(1 - 1, -1 + 1)
-        self.assertEqual(a, b)
-        self.assertEqual(hash(a), hash(b))
-
-    def test_dictMadeWithPointsHasKey(self):
-        """If I put a point in a dict, then use a point with same coords,
-        does this show up as a key?"""
-        a = Point(0,0)
-        b = Point(1 - 1, -1 + 1)
-        d = {a: 23}
-        self.assertTrue(d.has_key(b))
-
-    def test_rotatePointDegrees(self):
-        a = Point(1, 0)
-        b = a.rotate(90)
-        self.assertEqual(b, Point(0, 1))
+from ConnectThePower import GameCore, MainGameUI, Directions, getGridPlacesForTerminals
+import ConnectThePower
+from Point import Point
 
 class TestGameCore(unittest.TestCase):
     """Test the basic stuff in the game core"""
@@ -33,13 +13,13 @@ class TestGameCore(unittest.TestCase):
         gc._nextSegment = segment
         gc.playMove(coord)
 
-    def test_gameCoreNotWonWhenOnlyOneStraightSegmentPlayed(self):
+    def test_notWonWhenOnlyOneStraightSegmentPlayed(self):
         gc = GameCore()
         self.helper_playMove(gc, Point(0,0), gc.StraightSegment(0))
         game_won = gc.hasWon()
         self.assertEquals(False, game_won)
 
-    def test_gameCoreNotWonWithFewerThanGridCells(self):
+    def test_notWonWithFewerThanGridCells(self):
         """If we have 6 grid cells, then 5 moves should not win the level"""
         gc = GameCore()
         toPlay = [(0,0), (1,0), (2,0), (3,0), (4, 0)]
@@ -47,6 +27,59 @@ class TestGameCore(unittest.TestCase):
         [self.helper_playMove(gc, c, gc.StraightSegment(0)) for c in toPlay]
         game_won = gc.hasWon()
         self.assertFalse(game_won)
+
+    def test_wonWithStraightLine(self):
+        """If we play a straight row across the top - we should win"""
+        gc = GameCore()
+        toPlay  = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0)]
+        toPlay = [Point(c) for c in toPlay]
+        [self.helper_playMove(gc, c, gc.StraightSegment(0)) for c in toPlay]
+        game_won = gc.hasWon()
+        self.assertTrue(game_won)
+
+class TestDirections(unittest.TestCase):
+    def test_leftNotEqualToRight(self):
+        self.assertTrue(Directions.left != Directions.right)
+        self.assertEqual(Directions.left != Directions.right, not Directions.left == Directions.right)
+
+class TestGetGridForTerminals(unittest.TestCase):
+    def test_itShouldGetTheNextPositionForEachInputTerminal(self):
+        start_terminals = [(Point(0,0), Directions.right)]
+        end_grid = getGridPlacesForTerminals(start_terminals)
+        self.assertEqual(end_grid, [(Point(1,0), Directions.left)])
+
+    def test_SegmentsForGridSegments(self):
+        sg = GameCore.StraightSegment()
+        usable_moves = {Point(1,0): sg}
+        grid_places = [(Point(1,0), Directions.left)]
+        expected = [(sg, Directions.left, Point(1,0))]
+        self.assertEqual(expected, ConnectThePower.getSegmentsForGridPlaces(grid_places, usable_moves))
+
+    def test_filterUsedMoves(self):
+        sg1 = GameCore.StraightSegment()
+        sg2 = GameCore.CornerSegment()
+        usable_moves = {Point(1,0): sg1, Point(2,0): sg2}
+        ConnectThePower.filterUsedMoves([(sg1,Directions.left, Point(1,0))], usable_moves)
+        self.assertFalse(usable_moves.has_key(Point(1,0)))
+
+    def test_getNewTerminalGroups(self):
+        sg = GameCore.StraightSegment()
+        segments = [(sg, Directions.left, Point(2,0))]
+        expected_terminals = [[(Point(2,0), Directions.right)]]
+        output = ConnectThePower.getNewTerminalGroups(segments)
+        self.assertEqual(expected_terminals, output)
+
+class Test_straightSegment(unittest.TestCase):
+    def test_straightSegmentWithoutRotationShouldBeRightToLeft(self):
+        sg = GameCore.StraightSegment()
+        self.assertEqual(sg.terminals, [Directions.left, Directions.right])
+
+    def test_straightSegmentShouldGetOppositeTerminalForPassedInTerminal(self):
+        sg = GameCore.StraightSegment()
+        input_dir = Directions.left
+        output = [terminal for terminal in sg.terminals if (terminal != input_dir)]
+        expected = [Directions.right]
+        self.assertEqual(expected, output)
 
 class TestGameUI(unittest.TestCase):
     """Test Game UI features"""
