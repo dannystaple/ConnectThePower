@@ -1,5 +1,5 @@
 import unittest
-from GameCore import GameCore, Directions, getGridPlacesForTerminals
+from GameCore import GameCore, Directions, getGridPlacesForTerminals, getSegmentsForGridPlaces, filterUsedMoves, getNewTerminalGroups
 from Point import Point
 
 __author__ = 'stapled'
