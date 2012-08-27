@@ -7,7 +7,7 @@ One a cable section is placed - it stays there!
 You can dispose of a section without placing it, but you must take the next.
 """
 import pygame
-from GameCore import  GameCore
+from GameCore import  GameCore, CornerSegment, StraightSegment
 from Point import Point
 
 __author__ = 'danny'
@@ -52,8 +52,8 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
-        self.segments = {GameCore.StraightSegment: pygame.image.load("StraightLine.png"),
-                         GameCore.CornerSegment: pygame.image.load("RightAngle.png")}
+        self.segments = {StraightSegment: pygame.image.load("StraightLine.png"),
+                         CornerSegment: pygame.image.load("RightAngle.png")}
 
         self._core = GameCore()
 

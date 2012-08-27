@@ -34,31 +34,67 @@ def getNewTerminalGroups(segments):
     groups = [group for group in groups if group]
     return groups
 
+class SegmentBase(object):
+    orig_terminals = []
+
+    def getTerminals(self, input_direction, pos):
+        if input_direction not in self.terminals:
+            return None
+        terminals = [(pos, n) for n in self.terminals if n != input_direction]
+        return terminals
+
+    def getConnectionsForDirection(self, input_direction):
+        """Return the valid connections for the current connection"""
+        if input_direction not in self.terminals:
+            return None
+        directions = [n for n in self.terminals if n != input_direction]
+        self.used_terminals = directions
+        return directions
+
+    def reset(self):
+        self.used_terminals = None
+
+    def __init__(self, rotation = 0):
+        """Rotation is in terms of multiples of 90"""
+        self.used_terminals = None
+        self.rotation = rotation
+        self.terminals = [terminal.rotate(rotation) for terminal in self.orig_terminals]
+
+class StraightSegment(SegmentBase):
+    orig_terminals = [Directions.left, Directions.right]
+
+class CornerSegment(SegmentBase):
+    orig_terminals = [Directions.left, Directions.top]
+
+
+class Cell(object):
+    __slots__ = ['position', 'rotation', 'segment']
+    def __init__(self, position, rotation, segment_class):
+        """Position = a point
+        Rotation = In terms of multiples of 90 (0, 1, 2, 3)
+        segment = A segment class"""
+        self.position = position
+        self.segment = segment_class(rotation)
+
+    def reset(self):
+        self.segment.reset()
+
+    def getConnectionsForDirection(self, input_dir):
+        """Given an input direction, get the terminals for this input direction.
+        Connections are a position and a direction"""
+        directions = self.segment.getConnectionsForDirection(input_dir)
+        connections = [(-direction, self.position + direction) for direction in directions]
+        return connections
+
+class SimpleLevel(object):
+    __slots__ = ["available_segments", "input", "output"]
 
 class GameCore(object):
     """Core game play system"""
 
-    grid_cells = 6
-
-    class SegmentBase(object):
-        def getTerminals(self, input_direction, pos):
-            if input_direction not in self.terminals:
-                return None
-            terminals = [(pos, n) for n in self.terminals if n != input_direction]
-            return terminals
-
-        def __init__(self, rotation = 0):
-            """Rotation is in terms of multiples of 90"""
-            self.rotation = rotation
-            self.terminals = [terminal.rotate(rotation) for terminal in self.orig_terminals]
-
-    class StraightSegment(SegmentBase):
-        orig_terminals = [Directions.left, Directions.right]
-
-    class CornerSegment(SegmentBase):
-        orig_terminals = [Directions.left, Directions.top]
-
+    grid_count = 6
     segments = [StraightSegment, CornerSegment]
+
 
     class SimpleLevel(object):
         def __init__(self, supply_position, output_position):
@@ -69,7 +105,7 @@ class GameCore(object):
 
         def checkWin(self, moves):
             """Check the set of moves to see if there is a win condition"""
-            if len(moves) < GameCore.grid_cells:
+            if len(moves) < GameCore.grid_count:
                 return False
             terminals = [self._supply_position]
             usable_moves = dict(moves)
@@ -87,7 +123,7 @@ class GameCore(object):
 
     def __init__(self):
         self._moves = {}
-        self._nextSegment = self.StraightSegment()
+        self._nextSegment = StraightSegment()
 
     def playMove(self, coords):
         self._moves[Point(coords)] = self._nextSegment
