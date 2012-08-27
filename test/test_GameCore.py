@@ -33,7 +33,7 @@ class TestGameCore(unittest.TestCase):
         gc = GameCore()
         toPlay  = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0)]
         toPlay = [Point(c) for c in toPlay]
-        [self.helper_playMove(gc, c, StraightSegment(0)) for c in toPlay]
+        [self.helper_playMove(gc, c, gc.StraightSegment(0)) for c in toPlay]
         game_won = gc.hasWon()
         self.assertTrue(game_won)
 
@@ -51,19 +51,34 @@ class TestGetGridForTerminals(unittest.TestCase):
         self.assertEqual(end_grid, [(Point(1,0), Directions.left)])
 
     def test_SegmentsForGridSegments(self):
-        sg = StraightSegment()
+        sg = GameCore.StraightSegment()
         usable_moves = {Point(1,0): sg}
         grid_places = [(Point(1,0), Directions.left)]
         expected = [(sg, Directions.left, Point(1,0))]
         self.assertEqual(expected, getSegmentsForGridPlaces(grid_places, usable_moves))
 
+    def test_filterUsedMoves(self):
+        sg1 = GameCore.StraightSegment()
+        sg2 = GameCore.CornerSegment()
+        usable_moves = {Point(1,0): sg1, Point(2,0): sg2}
+        filterUsedMoves([(sg1,Directions.left, Point(1,0))], usable_moves)
+        self.assertFalse(usable_moves.has_key(Point(1,0)))
+
+    def test_getNewTerminalGroups(self):
+        sg = GameCore.StraightSegment()
+        segments = [(sg, Directions.left, Point(2,0))]
+        expected_terminals = [[(Point(2,0), Directions.right)]]
+        output = getNewTerminalGroups(segments)
+        self.assertEqual(expected_terminals, output)
+
+
 class Test_straightSegment(unittest.TestCase):
     def test_straightSegmentWithoutRotationShouldBeRightToLeft(self):
-        sg = StraightSegment()
+        sg = GameCore.StraightSegment()
         self.assertEqual(sg.terminals, [Directions.left, Directions.right])
 
     def test_straightSegmentShouldGetOppositeTerminalForPassedInTerminal(self):
-        sg = StraightSegment()
+        sg = GameCore.StraightSegment()
         input_dir = Directions.left
         output = [terminal for terminal in sg.terminals if (terminal != input_dir)]
         expected = [Directions.right]
