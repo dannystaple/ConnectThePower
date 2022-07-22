@@ -8,7 +8,7 @@ You can dispose of a section without placing it, but you must take the next.
 """
 import pygame
 from pygame.math import Vector2
-from game_core import  GameCore, CornerSegment, StraightSegment
+from game_core import GameCore, CornerSegment, StraightSegment
 
 # List of tiles. Each is dictionary of asset filename, connections: [active grid list - 9 binary numbers for which allow current to pass].
 tiles = (
@@ -16,13 +16,15 @@ tiles = (
     {"asset": "assets/left.png", "connections": [0, 0, 0, 1, 1, 0, 0, 1, 0]},
     {"asset": "assets/right.png", "connections": [0, 0, 0, 0, 1, 1, 0, 1, 0]},
     {"asset": "assets/cross.png", "connections": [0, 1, 0, 1, 1, 1, 0, 1, 0]},
-    {"asset": "assets/tjunction.png", "connections": [0, 1, 0, 1, 1, 1, 0, 0 ,0]}
+    {"asset": "assets/tjunction.png", "connections": [0, 1, 0, 1, 1, 1, 0, 0, 0]},
 )
+
 
 class Colours:
     electric_blue = (192, 192, 255)
     black = (0, 0, 0)
     grey = (0x88, 0x88, 0x88)
+
 
 class SceneBase(object):
     def __init__(self, screen):
@@ -34,9 +36,12 @@ class SceneBase(object):
     def _line(self, colour, start, end):
         pygame.draw.line(self._screen, colour, start, end)
 
+
 class Splash(object):
     """Picture of crazy electrician. Clicks/presses fade to menu"""
+
     pass
+
 
 class MainGameUI(SceneBase):
     bg_colour = Colours.electric_blue
@@ -60,8 +65,10 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
-        self.segments = {StraightSegment: pygame.image.load("assets/StraightLine.png"),
-                         CornerSegment: pygame.image.load("assets/RightAngle.png")}
+        self.segments = {
+            StraightSegment: pygame.image.load("assets/StraightLine.png"),
+            CornerSegment: pygame.image.load("assets/RightAngle.png"),
+        }
 
         self._core = GameCore()
 
@@ -77,10 +84,14 @@ class MainGameUI(SceneBase):
             self._render()
 
     def _draw_grid(self):
-        [self._line(self.grid_colour, (self.grid_left, row), (self.grid_right, row))
-         for row in self.grid_rows]
-        [self._line(self.grid_colour, (col, self.grid_top), (col, self.grid_bottom))
-         for col in self.grid_cols]
+        [
+            self._line(self.grid_colour, (self.grid_left, row), (self.grid_right, row))
+            for row in self.grid_rows
+        ]
+        [
+            self._line(self.grid_colour, (col, self.grid_top), (col, self.grid_bottom))
+            for col in self.grid_cols
+        ]
 
     def _render_segment(self, segment, rect):
         seg_image = self.segments[type(segment)]
@@ -123,18 +134,24 @@ class MainGameUI(SceneBase):
         if self._core.hasWon():
             print("I think you won!")
 
+
 class MainMenu(object):
     """Game, settings, exit"""
+
     pass
+
 
 class Settings(object):
     """Sound/music on off. Fullscreen/not is window controls"""
+
     pass
+
 
 def init():
     screen = pygame.display.set_mode((640, 400))
     return screen
-  
+
+
 def main():
     screen = init()
     spInstance = Splash()
@@ -142,6 +159,7 @@ def main():
     menu = MainMenu()
     settings = Settings()
     game.enter()
-    
+
+
 if __name__ == "__main__":
     main()
