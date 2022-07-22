@@ -52,8 +52,8 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
-        self.segments = {StraightSegment: pygame.image.load("StraightLine.png"),
-                         CornerSegment: pygame.image.load("RightAngle.png")}
+        self.segments = {StraightSegment: pygame.image.load("asset/sStraightLine.png"),
+                         CornerSegment: pygame.image.load("assets/RightAngle.png")}
 
         self._core = GameCore()
 
