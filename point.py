@@ -23,7 +23,7 @@ class Point(object):
         """Other must be numeric"""
         return Point(self.x * other, self.y * other)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         """Other must be numeric"""
         return Point(self.x / other, self.y / other)
 

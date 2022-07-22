@@ -52,3 +52,8 @@ class TestPoint(TestCase):
         l = [a,b,c,d,a,c,a,b,c,a,d,c,b,a]
         out = [item for item in l if item != c]
         self.assertNotIn(c, out)
+
+    def test_scaling_point_by_division(self):
+        a = Point(4, 12)
+        b = a / 4
+        self.assertEqual(b, Point(1, 3))
