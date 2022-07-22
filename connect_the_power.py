@@ -7,8 +7,8 @@ One a cable section is placed - it stays there!
 You can dispose of a section without placing it, but you must take the next.
 """
 import pygame
-from GameCore import  GameCore, CornerSegment, StraightSegment
-from Point import Point
+from game_core import  GameCore, CornerSegment, StraightSegment
+from point import Point
 
 __author__ = 'danny'
 

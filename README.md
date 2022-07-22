@@ -10,8 +10,7 @@ Needs:
 segments like T juntions, elbows, straight through and crosses. With different voltages signals, don't cross the wires! 
 Kaboom. Timer or limited tile dynamics for game difficulty. Hopefully some colourful simple graphics.
 - It has tests - they should probably be checeked in a workflow/commit hook along with lints.
-- Sreenshots - what does it even do so far?
-- Can capture this in github issues once it's properly in.
+- Screenshots - what does it even do so far?
 - Maybe can have lights, logic or machinees that run whent eh power is connected. Silly fun back story. Sound FX, title 
 screen etc - polish. 
 - Perhaps have stages of development in branches, suitable for use in a coder dojo where branches can be updated out. Need 
