@@ -33,12 +33,6 @@ class Point(object):
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-    # def __cmp__(self, other):
-    #     if (self.x == other.x) and (self.y == other.y):
-    #         return 0
-    #     else:
-    #         return 1
-
     def __getitem__(self, item):
         if item is 0:
             return self.x
