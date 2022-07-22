@@ -7,8 +7,8 @@ One a cable section is placed - it stays there!
 You can dispose of a section without placing it, but you must take the next.
 """
 import pygame
+from pygame.math import Vector2
 from game_core import  GameCore, CornerSegment, StraightSegment
-from point import Point
 
 # List of tiles. Each is dictionary of asset filename, connections: [active grid list - 9 binary numbers for which allow current to pass].
 tiles = (
@@ -108,11 +108,11 @@ class MainGameUI(SceneBase):
 
     def to_core_grid(self, pos):
         """Given a position, convert to game core grid coords"""
-        return (Point(pos) - Point(self.game_rect.topleft)) / self.grid_size
+        return (Vector2(pos) - Vector2(self.game_rect.topleft)) // self.grid_size
 
     def from_core_grid(self, pos):
         """Given a core grid coord, convert to ui position"""
-        return (Point(pos) * self.grid_size) + Point(self.game_rect.topleft)
+        return (Vector2(pos) * self.grid_size) + Vector2(self.game_rect.topleft)
 
     def _play_move(self, pos):
         if self.game_rect.collidepoint(pos):

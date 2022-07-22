@@ -1,6 +1,6 @@
 import itertools
 import random
-from point import Point
+from pygame.math import Vector2
 
 def getGridPlacesForTerminals(terminals):
     return [(pos + direction, -direction) for pos, direction in terminals]
@@ -16,10 +16,10 @@ def getSegmentsForGridPlaces(grid_places, usable_moves):
 
 class Directions(object):
     #Directions - offsets on grid system
-    top = up = Point(0, -1)
-    right = Point(1, 0)
-    bottom = down = Point(0, 1)
-    left = Point(-1, 0)
+    top = up = Vector2(0, -1)
+    right = Vector2(1, 0)
+    bottom = down = Vector2(0, 1)
+    left = Vector2(-1, 0)
 
 
 def filterUsedMoves(segments, usable_moves):
@@ -87,6 +87,10 @@ class Cell(object):
 class SimpleLevel(object):
     __slots__ = ["available_segments", "input", "output"]
 
+
+def hash_vector2(vector: Vector2):
+    return hash(vector.x) ^ hash(vector.y)
+
 class GameCore(object):
     """Core game play system"""
 
@@ -117,14 +121,14 @@ class GameCore(object):
                 terminals = list(itertools.chain(*new_terminal_groups))
             return False
 
-    level1 = SimpleLevel( (Point(-1, 0), Directions.right), (Point(6, 0), Directions.left))
+    level1 = SimpleLevel( (Vector2(-1, 0), Directions.right), (Vector2(6, 0), Directions.left))
 
     def __init__(self):
         self._moves = {}
         self._nextSegment = StraightSegment()
 
-    def playMove(self, coords):
-        self._moves[Point(coords)] = self._nextSegment
+    def playMove(self, coords: Vector2):
+        self._moves[hash_vector2(coords)] = self._nextSegment
         self._newSegment()
 
     def _newSegment(self):
@@ -134,8 +138,8 @@ class GameCore(object):
     def hasWon(self):
         return self.level1.checkWin(self._moves)
 
-    def getMove(self, coords):
-        return self._moves[Point(coords)]
+    def getMove(self, coords: Vector2):
+        return self._moves[hash_vector2(coords)]
 
     def allMoves(self):
         return [(coords, segment) for coords, segment in self._moves.items()]
