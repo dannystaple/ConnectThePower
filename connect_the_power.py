@@ -10,6 +10,11 @@ import pygame
 from game_core import  GameCore, CornerSegment, StraightSegment
 from point import Point
 
+class Colours:
+    electric_blue = (192, 192, 255)
+    black = (0, 0, 0)
+    grey = (0x88, 0x88, 0x88)
+
 class SceneBase(object):
     def __init__(self, screen):
         self._screen = screen
@@ -25,22 +30,18 @@ class Splash(object):
     pass
 
 class MainGameUI(SceneBase):
-    electric_blue = (192, 192, 255)
-    black = (0, 0, 0)
-    grey = (0x88, 0x88, 0x88)
-
-    bg_colour = electric_blue
+    bg_colour = Colours.electric_blue
 
     top_coord = 50
 
-    game_rect_colour = black
+    game_rect_colour = Colours.black
     game_rect = pygame.Rect(170, top_coord, 300, 300)
 
     next_item_rect = (35, top_coord, 100, 100)
-    next_item_colour = black
+    next_item_colour = Colours.black
 
     grid_size = 50
-    grid_colour = grey
+    grid_colour = Colours.grey
     grid_left = game_rect.left
     grid_right = game_rect.right
     grid_top = game_rect.top
