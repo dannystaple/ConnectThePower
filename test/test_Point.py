@@ -1,6 +1,6 @@
 import unittest
 
-from Point import Point
+from point import Point
 
 class TestPoint(unittest.TestCase):
     """Test the point class"""

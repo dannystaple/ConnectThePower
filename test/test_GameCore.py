@@ -1,8 +1,7 @@
 import unittest
-from GameCore import GameCore, Directions, getGridPlacesForTerminals, StraightSegment, CornerSegment, getSegmentsForGridPlaces
-from Point import Point
+from game_core import GameCore, Directions, getGridPlacesForTerminals, StraightSegment, CornerSegment, getSegmentsForGridPlaces
+from point import Point
 
-__author__ = 'stapled'
 
 class TestGameCore(unittest.TestCase):
     """Test the basic stuff in the game core"""

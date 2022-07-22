@@ -1,7 +1,7 @@
 import unittest
 import mock
-from ConnectThePower import  MainGameUI
-from Point import Point
+from connect_the_power import  MainGameUI
+from point import Point
 
 class TestGameUI(unittest.TestCase):
     """Test Game UI features"""
