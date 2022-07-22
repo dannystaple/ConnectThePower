@@ -24,13 +24,14 @@ class Colours:
     electric_blue = (192, 192, 255)
     black = (0, 0, 0)
     grey = (0x88, 0x88, 0x88)
+    red = (0xFF, 0x00, 0x00)
 
 
-class SceneBase(object):
+class SceneBase:
     def __init__(self, screen):
         self._screen = screen
 
-    def _rect(self, colour, rect):
+    def _rect(self, colour, rect: pygame.Rect):
         pygame.draw.rect(self._screen, colour, rect)
 
     def _line(self, colour, start, end):
@@ -48,20 +49,22 @@ class MainGameUI(SceneBase):
 
     top_coord = 50
 
-    game_rect_colour = Colours.black
+    game_rect_colour = Colours.grey
     game_rect = pygame.Rect(170, top_coord, 300, 300)
 
     next_item_rect = (35, top_coord, 100, 100)
     next_item_colour = Colours.black
 
     grid_size = 50
-    grid_colour = Colours.grey
+    grid_colour = Colours.black
     grid_left = game_rect.left
     grid_right = game_rect.right
     grid_top = game_rect.top
     grid_bottom = game_rect.bottom
     grid_cols = tuple([col for col in range(grid_left, grid_right, grid_size)])
     grid_rows = tuple([row for row in range(grid_top, grid_bottom, grid_size)])
+
+    power_terminal_colour = Colours.red
 
     def enter(self):
         """Enter the game screen"""
@@ -92,6 +95,20 @@ class MainGameUI(SceneBase):
             self._line(self.grid_colour, (col, self.grid_top), (col, self.grid_bottom))
             for col in self.grid_cols
         ]
+        self._rect(
+            self.power_terminal_colour,
+            pygame.Rect(
+                self.from_core_grid(self._core.current_level.supply_position[0]),
+                (self.grid_size, self.grid_size),
+            ),
+        )
+        self._rect(
+            self.power_terminal_colour,
+            pygame.Rect(
+                self.from_core_grid(self._core.current_level.output_position[0]),
+                (self.grid_size, self.grid_size),
+            ),
+        )
 
     def _render_segment(self, segment, rect):
         seg_image = self.segments[type(segment)]

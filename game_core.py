@@ -84,7 +84,27 @@ class CornerSegment(SegmentBase):
 
 
 class SimpleLevel:
-    __slots__ = ["available_segments", "input", "output"]
+    def __init__(self, supply_position: Vector2, output_position: Vector2):
+        """Positions - a Vector2 - ((-1,0), right) -
+        meaning it is at that coord, supplying to the right."""
+        self.supply_position = supply_position
+        self.output_position = output_position
+
+    def checkWin(self, moves):
+        """Check the set of moves to see if there is a win condition"""
+        if len(moves) < GameCore.grid_count:
+            return False
+        terminals = [self.supply_position]
+        usable_moves = dict(moves)
+        while terminals:
+            grid_places = get_grid_places_for_terminals(terminals)
+            if self.output_position in grid_places:
+                return True
+            segments = get_segments_for_grid_places(grid_places, usable_moves)
+            filter_used_moves(segments, usable_moves)
+            new_terminal_groups = get_new_terminal_groups(segments)
+            terminals = list(itertools.chain(*new_terminal_groups))
+        return False
 
 
 class GameCore:
@@ -93,30 +113,7 @@ class GameCore:
     grid_count = 6
     segments = [StraightSegment, CornerSegment]
 
-    class SimpleLevel:
-        def __init__(self, supply_position, output_position):
-            """Positions - a tuple - ((-1,0), right) -
-            meaning it is at that coord, supplying to the right."""
-            self._supply_position = supply_position
-            self._output_position = output_position
-
-        def checkWin(self, moves):
-            """Check the set of moves to see if there is a win condition"""
-            if len(moves) < GameCore.grid_count:
-                return False
-            terminals = [self._supply_position]
-            usable_moves = dict(moves)
-            while terminals:
-                grid_places = get_grid_places_for_terminals(terminals)
-                if self._output_position in grid_places:
-                    return True
-                segments = get_segments_for_grid_places(grid_places, usable_moves)
-                filter_used_moves(segments, usable_moves)
-                new_terminal_groups = get_new_terminal_groups(segments)
-                terminals = list(itertools.chain(*new_terminal_groups))
-            return False
-
-    level1 = SimpleLevel(
+    current_level: SimpleLevel = SimpleLevel(
         (Vector2(-1, 0), Directions.right), (Vector2(6, 0), Directions.left)
     )
 
@@ -133,7 +130,7 @@ class GameCore:
         self._nextSegment = random.choice(self.segments)(random.choice(range(0, 4)))
 
     def hasWon(self):
-        return self.level1.checkWin(self._moves)
+        return self.current_level.checkWin(self._moves)
 
     def getMove(self, coords: Vector2):
         return self._moves[hash_vector2(coords)]
