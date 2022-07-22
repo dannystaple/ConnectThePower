@@ -1,9 +1,9 @@
-import unittest
+from unittest import TestCase
 from game_core import GameCore, Directions, getGridPlacesForTerminals, StraightSegment, CornerSegment, getSegmentsForGridPlaces
 from point import Point
 
 
-class TestGameCore(unittest.TestCase):
+class TestGameCore(TestCase):
     """Test the basic stuff in the game core"""
 
     def helper_playMove(self, gc, coord, segment):
@@ -37,13 +37,13 @@ class TestGameCore(unittest.TestCase):
         self.assertTrue(game_won)
 
 
-class TestDirections(unittest.TestCase):
+class TestDirections(TestCase):
     def test_leftNotEqualToRight(self):
         self.assertTrue(Directions.left != Directions.right)
         self.assertEqual(Directions.left != Directions.right, not Directions.left == Directions.right)
 
 
-class TestGetGridForTerminals(unittest.TestCase):
+class TestGetGridForTerminals(TestCase):
     def test_itShouldGetTheNextPositionForEachInputTerminal(self):
         start_terminals = [(Point(0,0), Directions.right)]
         end_grid = getGridPlacesForTerminals(start_terminals)
@@ -71,7 +71,7 @@ class TestGetGridForTerminals(unittest.TestCase):
         self.assertEqual(expected_terminals, output)
 
 
-class Test_straightSegment(unittest.TestCase):
+class Test_straightSegment(TestCase):
     def test_straightSegmentWithoutRotationShouldBeRightToLeft(self):
         sg = GameCore.StraightSegment()
         self.assertEqual(sg.terminals, [Directions.left, Directions.right])

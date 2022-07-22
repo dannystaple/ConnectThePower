@@ -1,9 +1,8 @@
-import unittest
-import mock
+from unittest import TestCase, mock
 from connect_the_power import  MainGameUI
 from point import Point
 
-class TestGameUI(unittest.TestCase):
+class TestGameUI(TestCase):
     """Test Game UI features"""
 
     def test_testGridCoordsShouldMapToScreenCoords(self):

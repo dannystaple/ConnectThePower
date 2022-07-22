@@ -1,8 +1,8 @@
-import unittest
+from unittest import TestCase
 
 from point import Point
 
-class TestPoint(unittest.TestCase):
+class TestPoint(TestCase):
     """Test the point class"""
     def test_hashOfPointsAreTheSame(self):
         """Given two points of 0,0 - they should have same hash"""
