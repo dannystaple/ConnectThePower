@@ -50,7 +50,7 @@ class MainGameUI(SceneBase):
 
     def enter(self):
         """Enter the game screen"""
-        self.segments = {StraightSegment: pygame.image.load("asset/sStraightLine.png"),
+        self.segments = {StraightSegment: pygame.image.load("assets/StraightLine.png"),
                          CornerSegment: pygame.image.load("assets/RightAngle.png")}
 
         self._core = GameCore()
@@ -106,12 +106,12 @@ class MainGameUI(SceneBase):
 
     def _playMove(self, pos):
         if self.game_rect.collidepoint(pos):
-            print "Played in rect at point %s" % (str(pos),)
+            print("Played in rect at point %s" % (str(pos),))
             pos = self.toCoreGrid(pos)
-            print "Core grid is point %s" % (str(pos),)
+            print("Core grid is point %s" % (str(pos),))
             self._core.playMove(pos)
         if self._core.hasWon():
-            print "I think you won!"
+            print("I think you won!")
 
 class MainMenu(object):
     """Game, settings, exit"""
@@ -131,7 +131,7 @@ def main():
     game = MainGameUI(screen)
     menu = MainMenu()
     settings = Settings()
-    game.enter()    
+    game.enter()
     
 if __name__ == "__main__":
     main()
