@@ -20,7 +20,3 @@ to consider that model.
 
 Intention would be for this to serve in coderdojo's - so may convert to the now far simpler pygamezero - it seems likely 
 that this would work there. Also may be able to use free game/kenney Nl assets if there are suitable ones.
-
-
-License
-Actually undecided. Need to check the status of the assets. Preferably give it a permissable license once checked. 
