@@ -10,7 +10,7 @@ def getSegmentsForGridPlaces(grid_places, usable_moves):
     """For each position, it will use the usable moves list,
     to get the segment, input direction and position"""
     segments = [(usable_moves[pos], input_dir, pos)
-        for pos, input_dir in grid_places if usable_moves.has_key(pos)]
+        for pos, input_dir in grid_places if pos in usable_moves]
     return segments
 
 

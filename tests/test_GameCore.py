@@ -1,5 +1,5 @@
 from unittest import TestCase
-from game_core import GameCore, Directions, getGridPlacesForTerminals, StraightSegment, CornerSegment, getSegmentsForGridPlaces
+from game_core import GameCore, Directions, getGridPlacesForTerminals, StraightSegment, CornerSegment, getSegmentsForGridPlaces, filterUsedMoves, getNewTerminalGroups
 from point import Point
 
 
@@ -32,7 +32,7 @@ class TestGameCore(TestCase):
         gc = GameCore()
         toPlay  = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0)]
         toPlay = [Point(c) for c in toPlay]
-        [self.helper_playMove(gc, c, gc.StraightSegment(0)) for c in toPlay]
+        [self.helper_playMove(gc, c, StraightSegment(0)) for c in toPlay]
         game_won = gc.hasWon()
         self.assertTrue(game_won)
 
@@ -50,21 +50,21 @@ class TestGetGridForTerminals(TestCase):
         self.assertEqual(end_grid, [(Point(1,0), Directions.left)])
 
     def test_SegmentsForGridSegments(self):
-        sg = GameCore.StraightSegment()
+        sg = StraightSegment()
         usable_moves = {Point(1,0): sg}
         grid_places = [(Point(1,0), Directions.left)]
         expected = [(sg, Directions.left, Point(1,0))]
         self.assertEqual(expected, getSegmentsForGridPlaces(grid_places, usable_moves))
 
     def test_filterUsedMoves(self):
-        sg1 = GameCore.StraightSegment()
-        sg2 = GameCore.CornerSegment()
+        sg1 = StraightSegment()
+        sg2 = CornerSegment()
         usable_moves = {Point(1,0): sg1, Point(2,0): sg2}
         filterUsedMoves([(sg1,Directions.left, Point(1,0))], usable_moves)
-        self.assertFalse(usable_moves.has_key(Point(1,0)))
+        self.assertFalse(Point(1,0) in usable_moves)
 
     def test_getNewTerminalGroups(self):
-        sg = GameCore.StraightSegment()
+        sg = StraightSegment()
         segments = [(sg, Directions.left, Point(2,0))]
         expected_terminals = [[(Point(2,0), Directions.right)]]
         output = getNewTerminalGroups(segments)
@@ -73,11 +73,11 @@ class TestGetGridForTerminals(TestCase):
 
 class Test_straightSegment(TestCase):
     def test_straightSegmentWithoutRotationShouldBeRightToLeft(self):
-        sg = GameCore.StraightSegment()
+        sg = StraightSegment()
         self.assertEqual(sg.terminals, [Directions.left, Directions.right])
 
     def test_straightSegmentShouldGetOppositeTerminalForPassedInTerminal(self):
-        sg = GameCore.StraightSegment()
+        sg = StraightSegment()
         input_dir = Directions.left
         output = [terminal for terminal in sg.terminals if (terminal != input_dir)]
         expected = [Directions.right]
