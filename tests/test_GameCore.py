@@ -27,7 +27,7 @@ class TestGameCore(TestCase):
         gc = GameCore()
         self.helper_playMove(gc, Vector2(0, 0), StraightSegment(0))
         game_won = gc.hasWon()
-        self.assertEquals(False, game_won)
+        self.assertEqual(False, game_won)
 
     def test_notWonWithFewerThanGridCells(self):
         """If we have 6 grid cells, then 5 moves should not win the level"""
