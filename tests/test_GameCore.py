@@ -25,7 +25,7 @@ class TestGameCore(TestCase):
 
     def test_notWonWhenOnlyOneStraightSegmentPlayed(self):
         gc = GameCore()
-        self.helper_playMove(gc, hash_vector2(Vector2(0, 0)), StraightSegment(0))
+        self.helper_playMove(gc, Vector2(0, 0), StraightSegment(0))
         game_won = gc.hasWon()
         self.assertEquals(False, game_won)
 

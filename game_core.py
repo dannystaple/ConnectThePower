@@ -1,6 +1,10 @@
 import itertools
 import random
+import typing
+
 from pygame.math import Vector2
+
+Vector2Hash = typing.Tuple[float, float]
 
 
 def hash_vector2(vector: Vector2):
@@ -22,14 +26,6 @@ def get_segments_for_grid_places(grid_places, usable_moves):
     return segments
 
 
-class Directions(object):
-    # Directions - offsets on grid system
-    top = up = Vector2(0, -1)
-    right = Vector2(1, 0)
-    bottom = down = Vector2(0, 1)
-    left = Vector2(-1, 0)
-
-
 def filter_used_moves(segments, usable_moves):
     [usable_moves.pop(hash_vector2(pos)) for seg, direction, pos in segments]
 
@@ -42,8 +38,16 @@ def get_new_terminal_groups(segments):
     return groups
 
 
-class SegmentBase(object):
-    orig_terminals = []
+class Directions:
+    # Directions - offsets on grid system
+    top = up = Vector2(0, -1)
+    right = Vector2(1, 0)
+    bottom = down = Vector2(0, 1)
+    left = Vector2(-1, 0)
+
+
+class SegmentBase:
+    orig_terminals: typing.List[typing.Tuple[Vector2Hash, int]] = []
 
     def get_terminals(self, input_direction, pos: Vector2):
         if input_direction not in self.terminals:
@@ -77,29 +81,6 @@ class StraightSegment(SegmentBase):
 
 class CornerSegment(SegmentBase):
     orig_terminals = [Directions.left, Directions.top]
-
-
-class Cell:
-    __slots__ = ["position", "rotation", "segment"]
-
-    def __init__(self, position, rotation, segment_class: SegmentBase):
-        """Position = a point
-        Rotation = In terms of multiples of 90 (0, 1, 2, 3)
-        segment = A segment class"""
-        self.position = position
-        self.segment = segment_class(rotation)
-
-    def reset(self):
-        self.segment.reset()
-
-    def get_connections_for_direction(self, input_dir):
-        """Given an input direction, get the terminals for this input direction.
-        Connections are a position and a direction"""
-        directions = self.segment.get_connections_for_direction(input_dir)
-        connections = [
-            (-direction, self.position + direction) for direction in directions
-        ]
-        return connections
 
 
 class SimpleLevel:
