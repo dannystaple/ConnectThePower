@@ -10,6 +10,15 @@ import pygame
 from game_core import  GameCore, CornerSegment, StraightSegment
 from point import Point
 
+# List of tiles. Each is dictionary of asset filename, connections: [active grid list - 9 binary numbers for which allow current to pass].
+tiles = (
+    {"asset": "assets/straight.png", "connections": [0, 0, 0, 1, 1, 1, 0, 0, 0]},
+    {"asset": "assets/left.png", "connections": [0, 0, 0, 1, 1, 0, 0, 1, 0]},
+    {"asset": "assets/right.png", "connections": [0, 0, 0, 0, 1, 1, 0, 1, 0]},
+    {"asset": "assets/cross.png", "connections": [0, 1, 0, 1, 1, 1, 0, 1, 0]},
+    {"asset": "assets/tjunction.png", "connections": [0, 1, 0, 1, 1, 1, 0, 0 ,0]}
+)
+
 class Colours:
     electric_blue = (192, 192, 255)
     black = (0, 0, 0)
