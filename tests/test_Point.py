@@ -41,14 +41,14 @@ class TestPoint(TestCase):
         b = a.rotate(90)
         self.assertEqual(b, Point(0, 1))
 
-    # def test_pointNotEqualCanBeUsedInListComp(self):
-    #     """Regression - problems were seen here.
-    #     Try the points in a list, then with a filter based
-    #     on != operator."""
-    #     a = Point(0,0)
-    #     b = Point(1,0)
-    #     c = Point(2,1)
-    #     d = Point(3,2)
-    #     l = [a,b,c,d,a,c,a,b,c,a,d,c,b,a]
-    #     out = [item for item in l if item != c]
-    #     self.assertNotIn(c, out)
+    def test_pointNotEqualCanBeUsedInListComp(self):
+        """Regression - problems were seen here.
+        Try the points in a list, then with a filter based
+        on != operator."""
+        a = Point(0,0)
+        b = Point(1,0)
+        c = Point(2,1)
+        d = Point(3,2)
+        l = [a,b,c,d,a,c,a,b,c,a,d,c,b,a]
+        out = [item for item in l if item != c]
+        self.assertNotIn(c, out)
