@@ -73,7 +73,7 @@ class MainGameUI(SceneBase):
                 self._playing = False
             elif event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                self._playMove(pos)
+                self._play_move(pos)
             self._render()
 
     def _draw_grid(self):
@@ -82,17 +82,17 @@ class MainGameUI(SceneBase):
         [self._line(self.grid_colour, (col, self.grid_top), (col, self.grid_bottom))
          for col in self.grid_cols]
 
-    def _renderSegment(self, segment, rect):
+    def _render_segment(self, segment, rect):
         seg_image = self.segments[type(segment)]
         rotation = segment.rotation * 90
         rotsegment = pygame.transform.rotate(seg_image, rotation)
         self._screen.blit(rotsegment, rect)
 
-    def _renderMoves(self):
+    def _render_moves(self):
         for coords, move in self._core.allMoves():
-            coords = self.fromCoreGrid(coords)
+            coords = self.from_core_grid(coords)
             rect = pygame.Rect(tuple(coords), (self.grid_size, self.grid_size))
-            self._renderSegment(move, rect)
+            self._render_segment(move, rect)
 
     def _render(self):
         self._screen.fill(self.bg_colour)
@@ -101,23 +101,23 @@ class MainGameUI(SceneBase):
 
         self._draw_grid()
 
-        self._renderSegment(self._core.nextSegment(), self.next_item_rect)
+        self._render_segment(self._core.nextSegment(), self.next_item_rect)
 
-        self._renderMoves()
+        self._render_moves()
         pygame.display.flip()
 
-    def toCoreGrid(self, pos):
+    def to_core_grid(self, pos):
         """Given a position, convert to game core grid coords"""
         return (Point(pos) - Point(self.game_rect.topleft)) / self.grid_size
 
-    def fromCoreGrid(self, pos):
+    def from_core_grid(self, pos):
         """Given a core grid coord, convert to ui position"""
         return (Point(pos) * self.grid_size) + Point(self.game_rect.topleft)
 
-    def _playMove(self, pos):
+    def _play_move(self, pos):
         if self.game_rect.collidepoint(pos):
             print("Played in rect at point %s" % (str(pos),))
-            pos = self.toCoreGrid(pos)
+            pos = self.to_core_grid(pos)
             print("Core grid is point %s" % (str(pos),))
             self._core.playMove(pos)
         if self._core.hasWon():

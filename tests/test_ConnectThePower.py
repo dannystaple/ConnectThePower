@@ -14,4 +14,4 @@ class TestGameUI(TestCase):
         expected_coords = Point(MainGameUI.grid_left, MainGameUI.grid_top)
         fakeDisplay = mock.Mock()
         ui = MainGameUI(fakeDisplay)
-        self.assertEqual(expected_coords, ui.fromCoreGrid(grid_coord))
+        self.assertEqual(expected_coords, ui.from_core_grid(grid_coord))
