@@ -1,7 +1,5 @@
 import math
 
-__author__ = 'stapled'
-
 class Point(object):
     __slots__=['x', 'y']
 

@@ -10,8 +10,6 @@ import pygame
 from game_core import  GameCore, CornerSegment, StraightSegment
 from point import Point
 
-__author__ = 'danny'
-
 class SceneBase(object):
     def __init__(self, screen):
         self._screen = screen

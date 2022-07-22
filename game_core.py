@@ -1,8 +1,6 @@
 import itertools
 import random
-from Point import Point
-
-__author__ = 'stapled'
+from point import Point
 
 def getGridPlacesForTerminals(terminals):
     return [(pos + direction, -direction) for pos, direction in terminals]
